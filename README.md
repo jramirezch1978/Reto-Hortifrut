@@ -1,4 +1,4 @@
-# Pokédex Fullstack
+# Pokédex Fullstack Challenge
 
 Aplicación fullstack que consume la PokéAPI, con backend en Go y frontend en React.js. Implementa búsqueda, paginación, caché y pruebas automatizadas.
 
