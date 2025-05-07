@@ -5,16 +5,25 @@ import { fetchPokemons } from './utils/api';
 
 function App() {
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [pokemons, setPokemons] = useState([]);
   const [count, setCount] = useState(0);
   const [limit] = useState(20);
   const [offset, setOffset] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  // Debounce search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400); // 400ms debounce
+    return () => clearTimeout(handler);
+  }, [search]);
+
   const loadPokemons = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await fetchPokemons({ search, limit, offset });
+      const data = await fetchPokemons({ search: debouncedSearch, limit, offset });
       setPokemons(data.results);
       setCount(data.count);
     } catch (e) {
@@ -22,7 +31,7 @@ function App() {
       setCount(0);
     }
     setLoading(false);
-  }, [search, limit, offset]);
+  }, [debouncedSearch, limit, offset]);
 
   useEffect(() => {
     loadPokemons();
