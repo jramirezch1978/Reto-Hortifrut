@@ -1,151 +1,211 @@
-# Pokédex Fullstack Challenge
+# Pokédex Fullstack
 
-## Descripción
-
-Este proyecto es una Pokédex fullstack que consume la PokéAPI desde un backend en Go y expone los datos a un frontend moderno en React.js. Incluye búsqueda, paginación, caché en frontend y backend, y buenas prácticas de estructura y código.
-
----
+Aplicación fullstack que consume la PokéAPI, con backend en Go y frontend en React.js. Implementa búsqueda, paginación, caché y pruebas automatizadas.
 
 ## Estructura del Proyecto
 
 ```
-/
-├── backend/                # Backend en Go
-├── frontend/               # Frontend en React.js
-├── README.md               # Este archivo
-├── Texto-reto.txt          # Instrucciones del reto
-└── ...
+.
+├── backend/
+│   ├── main.go                  # Punto de entrada y configuración del servidor
+│   ├── pokemon_api.go           # Endpoints principales y lógica de negocio
+│   ├── pokemon_detail_api.go    # Endpoint de detalles de Pokémon
+│   ├── pokemon_api_test.go      # Pruebas unitarias del backend
+│   ├── go.mod                   # Dependencias de Go
+│   ├── response.json            # Datos de ejemplo para pruebas
+│   ├── ResponseAllData.json     # Datos de ejemplo para pruebas
+│   └── README.md               # Documentación del backend
+│
+└── frontend/
+    ├── public/                 # Archivos estáticos
+    ├── src/
+    │   ├── components/
+    │   │   ├── PokemonList/    # Componente de listado y paginación
+    │   │   ├── PokemonDetailModal/ # Modal de detalles
+    │   │   ├── SearchBar/      # Barra de búsqueda con debouncing
+    │   │   └── test/          # Pruebas unitarias de componentes
+    │   ├── test/              # Pruebas generales
+    │   ├── utils/             # Utilidades y helpers
+    │   ├── App.js             # Componente principal
+    │   ├── App.css            # Estilos globales
+    │   ├── App.test.js        # Pruebas del componente App
+    │   ├── index.js           # Punto de entrada
+    │   ├── index.css          # Estilos globales
+    │   ├── setupTests.js      # Configuración de pruebas
+    │   ├── reportWebVitals.js # Métricas de rendimiento
+    │   └── logo.svg           # Assets
+    ├── package.json           # Dependencias y scripts
+    ├── package-lock.json      # Lock de dependencias
+    └── .gitignore            # Archivos ignorados por git
 ```
 
----
+## Requisitos Previos
 
-## Requisitos previos
+### Backend (Go)
 
-### 1. Instalar Go (si no lo tienes)
+- Go 1.16 o superior
+- Para Windows, se recomienda usar Chocolatey:
+  ```bash
+  choco install golang
+  ```
 
-En Windows, puedes usar Chocolatey:
+### Frontend (React)
 
-```sh
-choco install golang
-```
+- Node.js 14.x o superior
+- Para Windows, se recomienda usar Chocolatey:
+  ```bash
+  choco install nodejs
+  ```
 
-O descarga desde: https://go.dev/dl/
-
-### 2. Instalar Node.js y npm (si no lo tienes)
-
-Descarga desde: https://nodejs.org/
-
----
-
-## Backend (Go)
-
-### Instalación y ejecución
-
-1. Ve a la carpeta del backend:
-   ```sh
-   cd backend
-   ```
-2. Ejecuta el backend (esto compilará y levantará el servidor en http://localhost:8080):
-   ```sh
-   go run .
-   ```
-
-   > **Nota:** El punto (`.`) le dice a Go que ejecute todos los archivos del paquete.
-   >
-
-### Consideraciones
-
-- El backend implementa caché en memoria para optimizar llamadas a la PokéAPI.
-- El endpoint principal es:
-  - `GET /api/pokemon?search=&limit=20&offset=0` (listado, búsqueda y paginación)
-  - `GET /api/pokemon/{nombre}` (detalle de un Pokémon)
-
----
-
-## Frontend (React.js)
-
-### Instalación y ejecución
-
-1. Ve a la carpeta del frontend:
-   ```sh
-   cd frontend
-   ```
-2. Instala las dependencias:
-   ```sh
-   npm install
-   ```
-3. Levanta la app en modo desarrollo:
-   ```sh
-   npm start
-   ```
-
-   Esto abrirá la app en http://localhost:3000
-
-### Consideraciones
-
-- El frontend usa localStorage para cachear resultados de búsqueda y paginación.
-- Implementa debouncing en la barra de búsqueda para evitar múltiples llamadas a la API.
-- Los componentes están organizados en carpetas por buena práctica.
-- El archivo `.gitignore` ya excluye carpetas como `node_modules` y `build`.
-
----
-
-## Comandos útiles
+## Instalación
 
 ### Backend
 
-- Levantar el backend:
-  ```sh
-  cd backend
-  go run .
-  ```
+```bash
+cd backend
+go mod download
+```
 
 ### Frontend
 
-- Instalar dependencias:
-  ```sh
-  cd frontend
-  npm install
-  ```
-- Levantar el frontend:
-  ```sh
-  npm start
-  ```
+```bash
+cd frontend
+npm install
+```
 
----
+## Ejecución
 
-## Tecnologías usadas
+### Backend
 
-- **Backend:** Go (net/http, encoding/json)
-- **Frontend:** React.js (create-react-app), localStorage, fetch
-- **Estilos:** CSS moderno, flexbox
-- **Caché:** localStorage (frontend), memoria (backend)
+```bash
+cd backend
+go run main.go
+```
 
----
+El servidor se ejecutará en `http://localhost:8080`
 
-## Decisiones técnicas clave
+### Frontend
 
-- El backend centraliza el consumo de la PokéAPI y expone endpoints propios, permitiendo control de caché y lógica de negocio.
-- El frontend cachea cada página y búsqueda por separado para máxima eficiencia y experiencia de usuario.
-- Se implementó debouncing en la búsqueda para evitar saturar la API.
-- La estructura de carpetas sigue buenas prácticas para escalabilidad y mantenibilidad.
+```bash
+cd frontend
+npm start
+```
 
----
+La aplicación se ejecutará en `http://localhost:3000`
 
-## Notas adicionales
+## Pruebas Automatizadas
 
-- Si tienes problemas de puerto en el backend, asegúrate de que no haya otro proceso usando el 8080.
-- Si el frontend no conecta, revisa que el backend esté corriendo en http://localhost:8080.
-- Para producción, se recomienda usar variables de entorno para las URLs.
+### Backend
 
----
+Para ejecutar las pruebas del backend:
 
-## Exclusiones de Git
+```bash
+cd backend
+go test ./... -v
+```
 
-- Las carpetas `node_modules/`, `build/`, y cualquier archivo generado automáticamente no deben subirse al repositorio. El archivo `.gitignore` ya lo contempla.
+Las pruebas del backend incluyen:
 
----
+- Pruebas de obtención de lista de Pokémon
+- Pruebas de obtención de detalles
+- Pruebas de caché
+- Pruebas de manejo de errores
+
+### Frontend
+
+Para ejecutar las pruebas del frontend:
+
+```bash
+cd frontend
+npm test
+```
+
+Para ver los resultados detallados de las pruebas:
+
+```bash
+npm test -- --verbose
+```
+
+Para ejecutar pruebas específicas:
+
+```bash
+# Ejecutar pruebas de un componente específico
+npm test -- PokemonList
+npm test -- PokemonDetailModal
+npm test -- SearchBar
+
+# Ejecutar pruebas en modo watch (útil durante el desarrollo)
+npm test -- --watch
+
+# Ejecutar pruebas con cobertura
+npm test -- --coverage
+```
+
+Las pruebas del frontend incluyen:
+
+- Pruebas de renderizado de componentes
+- Pruebas de interacción de usuario
+- Pruebas de manejo de estados
+- Pruebas de integración con la API
+
+## Tecnologías Utilizadas
+
+### Backend
+
+- Go
+- Gin (Framework web)
+- Testing package de Go
+- Caché en memoria
+
+### Frontend
+
+- React.js
+- React Testing Library
+- Jest
+- CSS Modules
+- React Paginate
+- localStorage para caché
+- Debouncing para búsqueda
+
+## Características Implementadas
+
+### Funcionalidades Principales
+
+- Listado de Pokémon con paginación
+- Búsqueda de Pokémon por nombre
+- Detalles completos de cada Pokémon
+- Interfaz moderna y responsive
+
+### Optimizaciones
+
+- Caché en memoria (backend)
+- Caché en localStorage (frontend)
+- Debouncing en la búsqueda
+- Paginación eficiente
+
+### Calidad de Código
+
+- Pruebas unitarias en backend y frontend
+- Estructura modular y mantenible
+- Código documentado
+- Buenas prácticas de desarrollo
+
+### UI/UX
+
+- Diseño moderno y responsive
+- Feedback visual de carga
+- Manejo de errores amigable
+- Transiciones suaves
+
+## Endpoints de la API
+
+### Backend
+
+- `GET /api/pokemon?search=&limit=20&offset=0` - Listado con búsqueda y paginación
+- `GET /api/pokemon/{nombre}` - Detalles de un Pokémon específico
 
 ## Contacto
 
-Para dudas técnicas o mejoras, contacta al desarrollador del reto.
+Para dudas técnicas, mejoras o sugerencias; contacta al desarrollador del reto:
+
+- **Correo:** jramirez@npssac.com.pe
