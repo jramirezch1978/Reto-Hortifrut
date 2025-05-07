@@ -5,6 +5,7 @@
   padding: 24px;
   max-width: 480px;
   margin: 40px auto;
+  max-height: calc(80vh); /* Ajusta 200px según el alto de tu buscador, paddings y paginador */
 }
 
 .pokedex-table {
@@ -118,4 +119,12 @@
   background: #b71c1c;
   color: #fff;
   box-shadow: 0 4px 12px #e6394644;
+}
+.pokedex-table-scroll {
+  max-height: calc(80vh - 200px); /* Ajusta 200px según el alto de tu buscador, paddings y paginador */
+  overflow-y: auto;
+  margin-bottom: 8px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px #e0e0f0;
 } 

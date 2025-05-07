@@ -32,32 +32,34 @@ const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) 
       {loading && <p className="pokedex-loading">Cargando...</p>}
       {!loading && sortedPokemons.length === 0 && <p className="pokedex-empty">No hay Pokémon para mostrar.</p>}
       {!loading && sortedPokemons.length > 0 && (
-        <table className="pokedex-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedPokemons.map((p, idx) => (
-              <tr key={p.name}>
-                <td>{offset + idx + 1}</td>
-                <td className="pokedex-name">{p.name.charAt(0).toUpperCase() + p.name.slice(1)}</td>
-                <td>
-                  <a 
-                    href="#" 
-                    onClick={(e) => handlePokemonClick(e, p.name)} 
-                    className="pokedex-link"
-                  >
-                    Ver
-                  </a>
-                </td>
+        <div className="pokedex-table-scroll">
+          <table className="pokedex-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>URL</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sortedPokemons.map((p, idx) => (
+                <tr key={p.name}>
+                  <td>{offset + idx + 1}</td>
+                  <td className="pokedex-name">{p.name.charAt(0).toUpperCase() + p.name.slice(1)}</td>
+                  <td>
+                    <a 
+                      href="#" 
+                      onClick={(e) => handlePokemonClick(e, p.name)} 
+                      className="pokedex-link"
+                    >
+                      Ver
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
       
       <ReactPaginate
