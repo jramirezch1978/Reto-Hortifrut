@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import SearchBar from './components/SearchBar';
-import PokemonList from './components/PokemonList';
+import SearchBar from './components/SearchBar/SearchBar';
+import PokemonList from './components/PokemonList/PokemonList';
 import { fetchPokemons } from './utils/api';
 
 function App() {

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import PokemonDetailModal from '../PokemonDetailModal/PokemonDetailModal';
 import './PokemonList.css';
 
 const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) => {
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
   const totalPages = Math.ceil(count / limit);
   const currentPage = Math.floor(offset / limit);
 
@@ -14,9 +16,15 @@ const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) 
     onPageChange(selected * limit);
   };
 
-  const handlePokemonClick = (e, pokemonName) => {
+  const handlePokemonClick = async (e, pokemonName) => {
     e.preventDefault();
-    window.open(`http://localhost:8080/api/pokemon/${pokemonName}`, '_blank');
+    try {
+      const response = await fetch(`http://localhost:8080/api/pokemon/${pokemonName}`);
+      const data = await response.json();
+      setSelectedPokemon(data);
+    } catch (error) {
+      console.error('Error fetching Pokemon details:', error);
+    }
   };
 
   return (
@@ -70,6 +78,13 @@ const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) 
         disabledClassName={"pokedex-disabled"}
       />
       <span className="pokedex-page-info">Página {currentPage + 1} de {totalPages}</span>
+
+      {selectedPokemon && (
+        <PokemonDetailModal
+          pokemon={selectedPokemon}
+          onClose={() => setSelectedPokemon(null)}
+        />
+      )}
     </div>
   );
 };
