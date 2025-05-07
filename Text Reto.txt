@@ -1,0 +1,23 @@
+Instrucciones de la Prueba
+Objetivo 
+Desde el backend, consumir la API de Pokémon (https://pokeapi.co) y exponer los datos para que el frontend los consulte.
+Consideraciones: 
+•	Frontend: React.js.
+•	Backend: Opciones disponibles: Go o cualquier otro framework que funcione con Node.js.
+Requisitos funcionales:
+Implementar búsqueda y paginación en el frontend.
+Utilizar algún mecanismo de caché en el navegador para mejorar la experiencia del usuario.
+Optimizar la búsqueda utilizando throttling o debouncing para evitar múltiples llamadas innecesarias a la API o consulta local mientras el usuario escribe en el campo de búsqueda.
+(Opcional) Implementar caché en el backend para reducir las consultas innecesarias a la API externa.
+(Opcional) Desplegar la solución en un entorno accesible (puede ser Vercel, Netlify, AWS, Render, etc.), integrando Continuous Deployment (CD) si lo consideran viable.
+Entrega y Repositorio
+Cada candidato deberá subir el código fuente a un repositorio en cualquier herramienta de Git (GitHub, GitLab, Bitbucket, etc.) y compartirnos el enlace junto con las instrucciones necesarias para ejecutarlo.
+Recomendaciones para los Candidatos
+Priorizar buenas prácticas de desarrollo: código limpio, modular y bien estructurado.
+Aplicar principios de optimización en la consulta y gestión de datos.
+(Opcional) Documentar brevemente la solución en un README (instrucciones de instalación, tecnologías usadas y decisiones técnicas clave).
+(Opcional) Agregar pruebas unitarias o de integración si lo consideran relevante.
+
+La entrevista técnica tendrá una duración máxima de 1 hora, durante la cual el candidato deberá explicar la implementación y el desarrollo del proyecto.
+La entrevista técnica se llevará a cabo, tentativamente, el 8 de mayo del 2025.
+
