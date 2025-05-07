@@ -28,6 +28,40 @@ type CacheItem struct {
 	ExpiresAt time.Time
 }
 
+type PokemonDetail struct {
+	ID             int    `json:"id"`
+	Name           string `json:"name"`
+	BaseExperience int    `json:"base_experience"`
+	Height         int    `json:"height"`
+	Weight         int    `json:"weight"`
+	Abilities      []struct {
+		Ability struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"ability"`
+		IsHidden bool `json:"is_hidden"`
+		Slot     int  `json:"slot"`
+	} `json:"abilities"`
+	Types []struct {
+		Slot int `json:"slot"`
+		Type struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"type"`
+	} `json:"types"`
+	Stats []struct {
+		BaseStat int `json:"base_stat"`
+		Effort   int `json:"effort"`
+		Stat     struct {
+			Name string `json:"name"`
+			URL  string `json:"url"`
+		} `json:"stat"`
+	} `json:"stats"`
+	Sprite struct {
+		FrontDefault string `json:"front_default"`
+	} `json:"sprites"`
+}
+
 var (
 	cache      = make(map[string]CacheItem)
 	cacheMutex sync.Mutex
@@ -68,6 +102,25 @@ func fetchPokemonList(limit, offset int) (PokemonListResponse, error) {
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		return PokemonListResponse{}, err
+	}
+	return data, nil
+}
+
+func fetchPokemonDetail(name string) (PokemonDetail, error) {
+	url := fmt.Sprintf("https://pokeapi.co/api/v2/pokemon/%s", name)
+	resp, err := http.Get(url)
+	if err != nil {
+		return PokemonDetail{}, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return PokemonDetail{}, err
+	}
+	var data PokemonDetail
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		return PokemonDetail{}, err
 	}
 	return data, nil
 }
@@ -133,8 +186,39 @@ func pokemonHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+func pokemonDetailHandler(w http.ResponseWriter, r *http.Request) {
+	// Permitir CORS
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Manejar preflight (OPTIONS)
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	// Obtener el nombre del Pokémon de la URL
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) != 4 {
+		http.Error(w, "Invalid URL format", http.StatusBadRequest)
+		return
+	}
+	name := parts[3]
+
+	data, err := fetchPokemonDetail(name)
+	if err != nil {
+		http.Error(w, "Error fetching Pokemon details", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
+}
+
 func main() {
 	http.HandleFunc("/api/pokemon", pokemonHandler)
+	http.HandleFunc("/api/pokemon/", pokemonDetailHandler)
 	fmt.Println("Servidor iniciado en http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

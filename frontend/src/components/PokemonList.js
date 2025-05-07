@@ -14,6 +14,11 @@ const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) 
     onPageChange(selected * limit);
   };
 
+  const handlePokemonClick = (e, pokemonName) => {
+    e.preventDefault();
+    window.open(`http://localhost:8080/api/pokemon/${pokemonName}`, '_blank');
+  };
+
   return (
     <div className="pokedex-container">
       {loading && <p className="pokedex-loading">Cargando...</p>}
@@ -32,31 +37,38 @@ const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) 
               <tr key={p.name}>
                 <td>{offset + idx + 1}</td>
                 <td className="pokedex-name">{p.name.charAt(0).toUpperCase() + p.name.slice(1)}</td>
-                <td><a href={p.url} target="_blank" rel="noopener noreferrer" className="pokedex-link">Ver</a></td>
+                <td>
+                  <a 
+                    href="#" 
+                    onClick={(e) => handlePokemonClick(e, p.name)} 
+                    className="pokedex-link"
+                  >
+                    Ver
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      <div className="pokedex-paginate-wrapper">
-        <ReactPaginate
-          previousLabel={"Anterior"}
-          nextLabel={"Siguiente"}
-          breakLabel={"..."}
-          breakClassName={"break-me"}
-          pageCount={totalPages}
-          marginPagesDisplayed={1}
-          pageRangeDisplayed={2}
-          onPageChange={handlePageClick}
-          forcePage={currentPage}
-          containerClassName={"pokedex-pagination"}
-          activeClassName={"active"}
-          pageClassName={"pokedex-page"}
-          previousClassName={"pokedex-prev"}
-          nextClassName={"pokedex-next"}
-          disabledClassName={"pokedex-disabled"}
-        />
-      </div>
+      
+      <ReactPaginate
+        previousLabel={"Anterior"}
+        nextLabel={"Siguiente"}
+        breakLabel={"..."}
+        breakClassName={"break-me"}
+        pageCount={totalPages}
+        marginPagesDisplayed={1}
+        pageRangeDisplayed={2}
+        onPageChange={handlePageClick}
+        forcePage={currentPage}
+        containerClassName={"pokedex-pagination"}
+        activeClassName={"active"}
+        pageClassName={"pokedex-page"}
+        previousClassName={"pokedex-prev"}
+        nextClassName={"pokedex-next"}
+        disabledClassName={"pokedex-disabled"}
+      />
       <span className="pokedex-page-info">Página {currentPage + 1} de {totalPages}</span>
     </div>
   );
