@@ -1,28 +1,63 @@
 import React from 'react';
+import ReactPaginate from 'react-paginate';
+import './PokemonList.css';
 
 const PokemonList = ({ pokemons, count, limit, offset, onPageChange, loading }) => {
   const totalPages = Math.ceil(count / limit);
-  const currentPage = Math.floor(offset / limit) + 1;
+  const currentPage = Math.floor(offset / limit);
+
+  // Ordenar alfabéticamente por nombre
+  const sortedPokemons = [...pokemons].sort((a, b) => a.name.localeCompare(b.name));
+
+  const handlePageClick = (data) => {
+    const selected = data.selected;
+    onPageChange(selected * limit);
+  };
 
   return (
-    <div>
-      {loading && <p>Cargando...</p>}
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {pokemons.map((p) => (
-          <li key={p.name} style={{ margin: '8px 0', borderBottom: '1px solid #eee' }}>
-            {p.name.charAt(0).toUpperCase() + p.name.slice(1)}
-          </li>
-        ))}
-      </ul>
-      <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center', gap: 8 }}>
-        <button onClick={() => onPageChange(offset - limit)} disabled={offset === 0}>
-          Anterior
-        </button>
-        <span>Página {currentPage} de {totalPages}</span>
-        <button onClick={() => onPageChange(offset + limit)} disabled={offset + limit >= count}>
-          Siguiente
-        </button>
+    <div className="pokedex-container">
+      {loading && <p className="pokedex-loading">Cargando...</p>}
+      {!loading && sortedPokemons.length === 0 && <p className="pokedex-empty">No hay Pokémon para mostrar.</p>}
+      {!loading && sortedPokemons.length > 0 && (
+        <table className="pokedex-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>URL</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedPokemons.map((p, idx) => (
+              <tr key={p.name}>
+                <td>{offset + idx + 1}</td>
+                <td className="pokedex-name">{p.name.charAt(0).toUpperCase() + p.name.slice(1)}</td>
+                <td><a href={p.url} target="_blank" rel="noopener noreferrer" className="pokedex-link">Ver</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <div className="pokedex-paginate-wrapper">
+        <ReactPaginate
+          previousLabel={"Anterior"}
+          nextLabel={"Siguiente"}
+          breakLabel={"..."}
+          breakClassName={"break-me"}
+          pageCount={totalPages}
+          marginPagesDisplayed={1}
+          pageRangeDisplayed={2}
+          onPageChange={handlePageClick}
+          forcePage={currentPage}
+          containerClassName={"pokedex-pagination"}
+          activeClassName={"active"}
+          pageClassName={"pokedex-page"}
+          previousClassName={"pokedex-prev"}
+          nextClassName={"pokedex-next"}
+          disabledClassName={"pokedex-disabled"}
+        />
       </div>
+      <span className="pokedex-page-info">Página {currentPage + 1} de {totalPages}</span>
     </div>
   );
 };

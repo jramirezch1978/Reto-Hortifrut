@@ -29,8 +29,10 @@ function App() {
   }, [loadPokemons]);
 
   const handleSearch = (value) => {
-    setSearch(value);
-    setOffset(0);
+    if (value !== search) {
+      setSearch(value);
+      setOffset(0);
+    }
   };
 
   const handlePageChange = (newOffset) => {
@@ -38,17 +40,19 @@ function App() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '40px auto', padding: 16, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px #eee' }}>
-      <h2>Pokédex</h2>
-      <SearchBar onSearch={handleSearch} />
-      <PokemonList
-        pokemons={pokemons}
-        count={count}
-        limit={limit}
-        offset={offset}
-        onPageChange={handlePageChange}
-        loading={loading}
-      />
+    <div>
+      <h2 style={{ textAlign: 'center', color: '#e63946', marginTop: 24, marginBottom: 0 }}>Pokédex</h2>
+      <div className="pokedex-container">
+        <SearchBar value={search} onSearch={handleSearch} />
+        <PokemonList
+          pokemons={pokemons}
+          count={count}
+          limit={limit}
+          offset={offset}
+          onPageChange={handlePageChange}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }

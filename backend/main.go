@@ -73,6 +73,17 @@ func fetchPokemonList(limit, offset int) (PokemonListResponse, error) {
 }
 
 func pokemonHandler(w http.ResponseWriter, r *http.Request) {
+	// Permitir CORS
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Manejar preflight (OPTIONS)
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	search := r.URL.Query().Get("search")
 	limit := 20
 	offset := 0
@@ -111,10 +122,10 @@ func pokemonHandler(w http.ResponseWriter, r *http.Request) {
 	paginated := filtered[start:end]
 
 	result := PokemonListResponse{
-		Count:   len(filtered),
-		Next:    "",
+		Count:    len(filtered),
+		Next:     "",
 		Previous: "",
-		Results: paginated,
+		Results:  paginated,
 	}
 
 	setCache(cacheKey, result)
@@ -126,4 +137,4 @@ func main() {
 	http.HandleFunc("/api/pokemon", pokemonHandler)
 	fmt.Println("Servidor iniciado en http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
-} 
+}
