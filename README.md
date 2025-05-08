@@ -8,6 +8,7 @@ Aplicación fullstack que consume la PokéAPI, con backend en Go y frontend en R
 .
 ├── backend/
 │   ├── main.go                  # Punto de entrada y configuración del servidor
+|   ├── cache.go                 # Gestion de la cache en el backend
 │   ├── pokemon_api.go           # Endpoints principales y lógica de negocio
 │   ├── pokemon_detail_api.go    # Endpoint de detalles de Pokémon
 │   ├── pokemon_api_test.go      # Pruebas unitarias del backend
